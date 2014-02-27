@@ -19,7 +19,7 @@ Requirements
 Getting Started
 ---------------
 
-    ... php
+    ``` php
     <?php
 
     /**
@@ -36,19 +36,19 @@ Getting Started
     $oService->start();
 
     ?>
-    ...
+    ```
 
 Launch:
 
-    ... sh
+    ``` sh
     $ php hello.php
-    ...
+    ```
 
 Terminate safely (assume PID is 1234):
 
-    ... sh
+    ``` sh
     $ kill 1234
-    ...
+    ```
 
 Documents
 ---------
