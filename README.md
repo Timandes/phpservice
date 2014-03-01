@@ -20,11 +20,14 @@ Getting Started
 ---------------
 
     ``` php
-    <?php
+<?php
 
     /**
      * hello.php
      */
+
+    // important!!!
+    declare(ticks=1);
 
     require 'vendor/autoload.php';
 
@@ -32,10 +35,10 @@ Getting Started
 
     $oService = Service::create(function() {
         // do something ...
-    }, 3);
-    $oService->start();
+    });
+    $oService->start(3);
 
-    ?>
+?>
     ```
 
 Launch:
