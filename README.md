@@ -20,6 +20,7 @@ Getting Started
 ---------------
 
     ``` php
+
 <?php
 
     /**
@@ -39,18 +40,23 @@ Getting Started
     $oService->start(3);
 
 ?>
+
     ```
 
 Launch:
 
     ``` sh
+
     $ php hello.php
+
     ```
 
 Terminate safely (assume PID is 1234):
 
     ``` sh
+
     $ kill 1234
+    
     ```
 
 Documents
