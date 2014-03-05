@@ -19,29 +19,23 @@ Requirements
 Getting Started
 ---------------
 
-    ``` php
+``` php
+/**
+ * hello.php
+ */
 
-<?php
+// important!!!
+declare(ticks=1);
 
-    /**
-     * hello.php
-     */
+require 'vendor/autoload.php';
 
-    // important!!!
-    declare(ticks=1);
+use Timandes\CLI\Service;
 
-    require 'vendor/autoload.php';
-
-    use Timandes\CLI\Service;
-
-    $oService = Service::create(function() {
-        // do something ...
-    });
-    $oService->start(3);
-
-?>
-
-    ```
+$oService = Service::create(function() {
+    // do something ...
+});
+$oService->start(3);
+```
 
 Launch:
 
@@ -56,7 +50,7 @@ Terminate safely (assume PID is 1234):
     ``` sh
 
     $ kill 1234
-    
+
     ```
 
 Documents
