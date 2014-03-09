@@ -19,9 +19,9 @@ $oService = Service::create(function() {
     for ($i = 0; $i < 10; ++$i) {
         $s += $i * $m;
 
-        fprintf(STDOUT, "Result(#%d)=%d\n", getmygid(), $s);
+        fprintf(STDOUT, "Result(#%d)=%d\n", getmypid(), $s);
         sleep(1);
     }
-    fprintf(STDOUT, "Finish(#%d)\n", getmygid());
+    fprintf(STDOUT, "Finish(#%d)\n", getmypid());
 });
 $oService->start(3);

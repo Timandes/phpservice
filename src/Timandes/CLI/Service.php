@@ -111,10 +111,10 @@ class Service
      */
     protected function _startChildProcess()
     {
-        $this->_unhookSignalForMainProcess(SIGTERM);
-        $this->_unhookSignalForMainProcess(SIGQUIT);
-        $this->_unhookSignalForMainProcess(SIGINT);
-        $this->_unhookSignalForMainProcess(SIGCHLD);
+        $this->_unhookSignal(SIGTERM);
+        $this->_unhookSignal(SIGQUIT);
+        $this->_unhookSignal(SIGINT);
+        $this->_unhookSignal(SIGCHLD);
 
         $this->_hookSignalForChildProcess(SIGTERM);
         $this->_hookSignalForChildProcess(SIGQUIT);
@@ -241,7 +241,20 @@ class Service
      */
     protected function _hookSignalForMainProcess($iSignal)
     {
-        $this->_hookSignal($iSignal, $this->_mainSignalHandler);
+        $oMe = $this;
+
+        $this->_hookSignal($iSignal, function ($iSignal) use ($oMe) {
+            switch ($iSignal) {
+                case SIGCHLD:
+                    $oMe->_handleChildSignal();
+                    break;
+                case SIGTERM:
+                case SIGQUIT:
+                case SIGINT:
+                    $oMe->_handleTerminateSignal();
+                    break;
+            }
+        });
     }
 
 
@@ -250,7 +263,16 @@ class Service
      */
     protected function _hookSignalForChildProcess($iSignal)
     {
-        $this->_hookSignal($iSignal, $this->_childSignalHandler);
+        $this->_hookSignal($iSignal, function ($iSignal) {
+            if($iSignal != SIGTERM
+                    && $iSignal != SIGQUIT
+                    && $iSignal != SIGINT)
+                return;
+
+            if($this->_processExiting)
+                return;
+            $this->_processExiting = true;
+        });
     }
 
     /** @var callback process function for child process */
@@ -264,32 +286,6 @@ class Service
 
     /** @var resource global event base */
     protected $_eventBase = null;
-
-    /** @var callback signal handler for main process */
-    protected $_mainSignalHandler = function ($iSignal) {
-        switch ($iSignal) {
-            case SIGCHLD:
-                $this->_handleChildSignal();
-                break;
-            case SIGTERM:
-            case SIGQUIT:
-            case SIGINT:
-                $this->_handleTerminateSignal();
-                break;
-        }
-    };
-
-    /** @var callback signal handler for child process */
-    protected $_childSignalHandler = function ($iSignal) {
-        if($iSignal != SIGTERM
-                && $iSignal != SIGQUIT
-                && $iSignal != SIGINT)
-            return;
-
-        if($this->_processExiting)
-            return;
-        $this->_processExiting = true;
-    };
 
     /** @var boolean whether if process is exiting */
     protected $_processExiting = false;
