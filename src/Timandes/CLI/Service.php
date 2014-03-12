@@ -106,15 +106,26 @@ class Service
     }
 
 
+    public function setVerbose($iVerbose)
+    {
+        $this->_verbose = $iVerbose;
+    }
+
+
+    protected function _output($sOutputs, $iVerboseWhen = 1)
+    {
+        if ($this->_verbose >= $iVerboseWhen)
+            fprintf(STDOUT, "%s %d: %s\n", date('Y-m-d H:i:s'), getmypid(), $sOutputs);
+    }
+
+
     /**
      * Call callback function
      */
     protected function _startChildProcess()
     {
-        $this->_unhookSignal(SIGTERM);
-        $this->_unhookSignal(SIGQUIT);
-        $this->_unhookSignal(SIGINT);
-        $this->_unhookSignal(SIGCHLD);
+        // for child process
+        $this->_eventBase = event_base_new();
 
         $this->_hookSignalForChildProcess(SIGTERM);
         $this->_hookSignalForChildProcess(SIGQUIT);
@@ -244,6 +255,8 @@ class Service
         $oMe = $this;
 
         $this->_hookSignal($iSignal, function ($iSignal) use ($oMe) {
+            $oMe->_output("Got signal {$iSignal}");
+
             switch ($iSignal) {
                 case SIGCHLD:
                     $oMe->_handleChildSignal();
@@ -275,6 +288,7 @@ class Service
         });
     }
 
+
     /** @var callback process function for child process */
     protected $_callback = null;
 
@@ -295,4 +309,7 @@ class Service
 
     /** @var array to save events related to signals */
     protected $_signalEventMapping = array();
+
+    /** @var int verbose level */
+    protected $_verbose = 0;
 }

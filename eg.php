@@ -24,4 +24,5 @@ $oService = Service::create(function() {
     }
     fprintf(STDOUT, "Finish(#%d)\n", getmypid());
 });
+$oService->setVerbose(2);
 $oService->start(3);
