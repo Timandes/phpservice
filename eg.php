@@ -16,13 +16,15 @@ use Timandes\CLI\Service;
 $oService = Service::create(function() {
     $m = mt_rand(1, 100);
     $s = 0;
-    for ($i = 0; $i < 10; ++$i) {
+    for ($i = 0; $i < 100; ++$i) {
         $s += $i * $m;
 
         fprintf(STDOUT, "Result(#%d)=%d\n", getmypid(), $s);
         sleep(1);
     }
     fprintf(STDOUT, "Finish(#%d)\n", getmypid());
+
+    exit(0);
 });
 $oService->setVerbose(2);
 $oService->start(3);
