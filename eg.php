@@ -19,7 +19,7 @@ use Timandes\CLI\Service;
 $oService = Service::create(function() {
     $m = mt_rand(1, 100);
     $s = 0;
-    for ($i = 0; $i < 100; ++$i) {
+    for ($i = 0; $i < 10; ++$i) {
         $s += $i * $m;
 
         fprintf(STDOUT, "Result(#%d)=%d\n", getmypid(), $s);
@@ -30,4 +30,4 @@ $oService = Service::create(function() {
     exit(0);
 });
 $oService->setVerbose(2);
-$oService->start(3);
+$oService->start(1);

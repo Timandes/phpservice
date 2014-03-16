@@ -23,7 +23,6 @@ class MainProcess
     {
         $this->_callback = $oCallback;
         $this->_eventBase = event_base_new();
-        $this->_childProcess = new ChildProcess($oCallback);
         $this->_signalManager = new SignalManager($this->_eventBase);
     }
 
@@ -71,6 +70,8 @@ class MainProcess
      */
     protected function _forkChildProcess()
     {
+        $oChildProcess = new ChildProcess($this->_callback);
+
         $iSubProcessId = pcntl_fork();
         if ($iSubProcessId < 0) {
             $this->_killAllWorkerProcesses();
@@ -78,10 +79,10 @@ class MainProcess
         }
 
         if ($iSubProcessId == 0) { // sub process
-            $this->_childProcess->start();
+            $oChildProcess->start();
         }
 
-        $this->_processMapping[$iSubProcessId] = $iSubProcessId;
+        $this->_processMapping[$iSubProcessId] = $oChildProcess;
         ++$this->_accProcessNum;
 
         return $iSubProcessId;
@@ -171,7 +172,7 @@ class MainProcess
     /** @var callback process function for child process */
     protected $_callback = null;
 
-    /** @var array to save child process id ( pid => pid ) */
+    /** @var array to save child process id ( pid => ChildProcess ) */
     protected $_processMapping = array();
 
     /** @var int accumulative created child processes since program started */
@@ -188,8 +189,6 @@ class MainProcess
 
     /** @var int verbose level */
     protected $_verbose = 0;
-
-    protected $_childProcess = null;
 
     protected $_signalManager = null;
 }

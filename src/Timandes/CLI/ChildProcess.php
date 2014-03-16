@@ -49,7 +49,7 @@ class ChildProcess
         $this->_eventTimeout = event_new();
         event_set($this->_eventTimeout, 0, EV_TIMEOUT, array($this, 'timedout'));
         event_base_set($this->_eventTimeout, $this->_eventBase);
-        event_add($this->_eventTimeout);
+        event_add($this->_eventTimeout, $iInterval);
 
         event_base_loop($this->_eventBase);
     }
