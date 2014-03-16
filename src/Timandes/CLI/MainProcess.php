@@ -45,18 +45,20 @@ class MainProcess
                 return -1;
         }
 
-        $this->_hookSignal(SIGTERM);
-        $this->_hookSignal(SIGQUIT);
-        $this->_hookSignal(SIGINT);
-        $this->_hookSignal(SIGCHLD);
-
+        $this->_hookAllSignals();
 
         while (!event_base_loop($this->_eventBase)
                 && !$this->_processExiting
                 && $this->_accProcessNum < $this->_maxTotalProcesses) {
+            $this->_signalManager->unhookAllSignals();
+
             $iSubProcessId = $this->_forkChildProcess();
-            if ($iSubProcessId < 0)
+            if ($iSubProcessId < 0) {
+                $this->_killAllWorkerProcesses();
                 return -1;
+            }
+
+            $this->_hookAllSignals();
         }
 
         return 0;
@@ -139,6 +141,15 @@ class MainProcess
         $this->_killAllWorkerProcesses();
 
         event_base_loopexit($this->_eventBase);
+    }
+
+
+    protected function _hookAllSignals()
+    {
+        $this->_hookSignal(SIGTERM);
+        $this->_hookSignal(SIGQUIT);
+        $this->_hookSignal(SIGINT);
+        $this->_hookSignal(SIGCHLD);
     }
 
 
