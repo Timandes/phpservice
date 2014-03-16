@@ -9,6 +9,9 @@
 
 declare(ticks=1);
 
+require 'src/Timandes/CLI/SignalManager.php';
+require 'src/Timandes/CLI/ChildProcess.php';
+require 'src/Timandes/CLI/MainProcess.php';
 require 'src/Timandes/CLI/Service.php';
 
 use Timandes\CLI\Service;

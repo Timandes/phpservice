@@ -153,7 +153,7 @@ class MainProcess
      * Signal handler
      */
     public function signalHandler($iSignal) {
-        $this->_output("Got signal {$iSignal}");
+        $this->_output("Got signal {$iSignal}\n");
 
         switch ($iSignal) {
             case SIGCHLD:

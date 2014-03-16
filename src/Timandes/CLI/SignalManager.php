@@ -47,7 +47,7 @@ class SignalManager
      *
      * @param int $iSignal
      */
-    protected function unhookSignal($iSignal)
+    public function unhookSignal($iSignal)
     {
         if (!isset($this->_signalEventMapping[$iSignal]))
             return;
@@ -62,7 +62,7 @@ class SignalManager
     /**
      * Unhook all signals
      */
-    protected function unhookAllSignals()
+    public function unhookAllSignals()
     {
         $a = $this->_signalEventMapping;
         foreach ($a as $signal => $event) {

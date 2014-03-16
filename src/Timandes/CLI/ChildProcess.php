@@ -47,7 +47,7 @@ class ChildProcess
         $this->_hookSignal(SIGINT);
 
         $this->_eventTimeout = event_new();
-        event_set($this->_eventTimeout, 0, EV_TIMEOUT, );
+        event_set($this->_eventTimeout, 0, EV_TIMEOUT, array($this, 'timedout'));
         event_base_set($this->_eventTimeout, $this->_eventBase);
         event_add($this->_eventTimeout);
 
