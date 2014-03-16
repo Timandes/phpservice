@@ -83,6 +83,7 @@ class MainProcess
         if ($iSubProcessId == 0) { // sub process
             $oChildProcess->start();
         }
+        $this->_output("Child process #" . $iSubProcessId . " started.", 2);
 
         $this->_processMapping[$iSubProcessId] = $oChildProcess;
         ++$this->_accProcessNum;
@@ -96,6 +97,7 @@ class MainProcess
      */
     protected function _killAllWorkerProcesses()
     {
+        $this->_output("All child processes will be terminated.", 2);
         if(is_array($this->_processMapping)) foreach($this->_processMapping as $pid => $v)
             posix_kill($pid, SIGTERM);
     }
@@ -120,6 +122,7 @@ class MainProcess
     protected function _handleChildSignal()
     {
         $iSubProcessId = pcntl_wait($iWorkerProcessStatus, WNOHANG);
+        $this->_output("Child process #" . $iSubProcessId . " exited.", 2);
         if ($iSubProcessId <= 0) {// error or no children quit
             return;
         }
@@ -146,6 +149,7 @@ class MainProcess
 
     protected function _hookAllSignals()
     {
+        $this->_output("Main process is going to hook signals.", 2);
         $this->_hookSignal(SIGTERM);
         $this->_hookSignal(SIGQUIT);
         $this->_hookSignal(SIGINT);
@@ -165,7 +169,7 @@ class MainProcess
      * Signal handler
      */
     public function signalHandler($iSignal) {
-        $this->_output("Got signal {$iSignal}\n");
+        $this->_output("Got signal {$iSignal}");
 
         switch ($iSignal) {
             case SIGCHLD:
